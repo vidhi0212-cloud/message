@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>For You ❤️</title>
+
+<style>
+body {
+  margin: 0;
+  font-family: 'Courier New', monospace;
+  background: linear-gradient(135deg, #ff9ecb, #8ec5fc);
+  overflow: hidden;
+  color: white;
+  text-align: center;
+}
+
+/* Floating hearts */
+.heart {
+  position: absolute;
+  color: rgba(255,255,255,0.7);
+  animation: float 6s linear infinite;
+}
+@keyframes float {
+  from { transform: translateY(100vh); opacity: 1; }
+  to { transform: translateY(-10vh); opacity: 0; }
+}
+
+/* Title */
+h1 {
+  margin-top: 20px;
+}
+
+/* Container */
+.container {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  margin-top: 80px;
+}
+
+/* Envelope */
+.envelope {
+  width: 180px;
+  height: 120px;
+  background: rgba(255,255,255,0.2);
+  position: relative;
+  cursor: pointer;
+  border-radius: 10px;
+  transition: 0.3s;
+}
+.envelope:hover { transform: scale(1.1); }
+
+/* Flap */
+.flap {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: rgba(255,255,255,0.3);
+  clip-path: polygon(0 0, 100% 0, 50% 50%);
+  transition: 0.5s;
+}
+.open .flap {
+  transform: rotateX(180deg);
+}
+
+/* Letter popup */
+.letter {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  width: 65%;
+  height: 65%;
+  background: white;
+  color: #333;
+  border-radius: 15px;
+  padding: 20px;
+  transition: 0.4s;
+  overflow-y: auto;
+}
+
+.letter.show {
+  transform: translate(-50%, -50%) scale(1);
+}
+
+/* Close */
+.close {
+  float: right;
+  cursor: pointer;
+}
+
+/* Typing */
+.text {
+  white-space: pre-wrap;
+  border-right: 2px solid black;
+  padding-top: 20px;
+}
+
+/* Date */
+.date {
+  font-size: 12px;
+  color: gray;
+}
+
+/* Signature */
+.signature {
+  position: fixed;
+  bottom: 15px;
+  width: 100%;
+  text-align: center;
+  font-family: 'Brush Script MT', cursive;
+  font-size: 55px;
+  letter-spacing: 2px;
+}
+
+/* V style */
+.signature .v {
+  background: linear-gradient(45deg, #ff4da6, #ff99cc);
+  -webkit-background-clip: text;
+  color: transparent;
+  text-shadow: 0 0 10px rgba(255,77,166,0.5);
+}
+
+/* K style */
+.signature .k {
+  background: linear-gradient(45deg, #4da6ff, #99ccff);
+  -webkit-background-clip: text;
+  color: transparent;
+  margin-left: -10px; /* overlap effect */
+  text-shadow: 0 0 10px rgba(77,166,255,0.5);
+}
+
+/* Music button */
+.music-btn {
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  background: white;
+  color: black;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+</style>
+</head>
+
+<body>
+
+<h1>💌 Tap an Envelope 💌</h1>
+
+<button class="music-btn" onclick="toggleMusic()">🎵 Music</button>
+
+<div class="container">
+  <div class="envelope" onclick="checkPassword(1)">
+    <div class="flap"></div>
+  </div>
+
+  <div class="envelope" onclick="checkPassword(2)">
+    <div class="flap"></div>
+  </div>
+</div>
+
+<!-- Letters -->
+<div class="letter" id="letter1">
+  <span class="close" onclick="closeLetter(1)">✖</span>
+  <div class="date" id="date1"></div>
+  <div class="text" id="text1"></div>
+</div>
+
+<div class="letter" id="letter2">
+  <span class="close" onclick="closeLetter(2)">✖</span>
+  <div class="date" id="date2"></div>
+  <div class="text" id="text2"></div>
+</div>
+
+<!-- Signature -->
+<div class="signature">V ♥ K</div>
+
+<!-- Music -->
+<audio id="bgMusic" loop>
+  <source src="https://www.bensound.com/bensound-music/bensound-love.mp3" type="audio/mp3">
+</audio>
+
+<script>
+const PASSWORD = "eyes"; // change this
+
+const messages = {
+  1: "Heyy sweaetheart, ik tane bau hurt thayu che due to dev and now tane dheere dheere trust issues aave che k bija b avu kari sake che tara jode. But trust me hu kyare aavu nai karu coz ik kehvu feel thay jyare koi aavu kare aapda jode. And I will always become a shield for u from these outer world so DW, I am always there for u jyare b low feel thay u can come and hug me , u will always get the bets comfort that u actually deserve. I LOVE YOU 💖 ",
+  2: "1st letter was for your comfort and this if for a lesson that you should remember everytime you trust anyone. see babe duniya aava loko thi j bhareli che so u need to be carefull. Koi pr b easily and blindly trust na kar de . jelto vadhar tu trust karis ne etlo j vadhar chance che k e loka tane use kare so better har vastu e limit ma rakh . friends can be frnds bt mind them they can be imposters too. so tara gosla tara steps tara tak rakh e loka ne naa kais u grow alone, u don't need people to see that how u are growing, let them just see your success not ur journey. It's confidential darling just keep it for ur loved ones. "
+};
+
+/* Password check */
+function checkPassword(num) {
+  let input = prompt("Password 💖(Hint - What I love the most in you):");
+  if (input === PASSWORD) {
+    openLetter(num);
+  } else {
+    alert("Wrong password!");
+  }
+}
+
+/* Open letter */
+function openLetter(num) {
+  let letter = document.getElementById("letter" + num);
+  let textBox = document.getElementById("text" + num);
+  let dateBox = document.getElementById("date" + num);
+
+  letter.classList.add("show");
+  textBox.innerHTML = "";
+
+  dateBox.innerText = new Date().toLocaleString();
+
+  let text = messages[num];
+  let i = 0;
+
+  function type() {
+    if (i < text.length) {
+      textBox.innerHTML += text.charAt(i);
+      i++;
+      setTimeout(type, 35);
+    }
+  }
+  type();
+}
+
+/* Close */
+function closeLetter(num) {
+  document.getElementById("letter" + num).classList.remove("show");
+}
+
+/* Hearts generator */
+function createHeart() {
+  let heart = document.createElement("div");
+  heart.className = "heart";
+  heart.innerText = "💖";
+  heart.style.left = Math.random() * 100 + "vw";
+  heart.style.fontSize = Math.random() * 20 + 10 + "px";
+  document.body.appendChild(heart);
+
+  setTimeout(() => heart.remove(), 6000);
+}
+setInterval(createHeart, 300);
+
+/* Music control */
+let music = document.getElementById("bgMusic");
+let playing = false;
+
+function toggleMusic() {
+  if (playing) {
+    music.pause();
+  } else {
+    music.play();
+  }
+  playing = !playing;
+}
+</script>
+
+</body>
+</html>
